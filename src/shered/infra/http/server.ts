@@ -4,10 +4,11 @@ import express, {Request, Response, NextFunction} from 'express';
 import cors from 'cors';
 import 'express-async-errors'
 import routes from './routes';
-import uploadConfig from '../src/config/upload';
-import AppError from './errors/AppError'
+import uploadConfig from '@config/upload';
+import AppError from '@shered/errors/AppError'
 
-import './database';
+
+import '@shered/infra/typeorm';
 
 const app = express();
 
