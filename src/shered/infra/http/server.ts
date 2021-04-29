@@ -9,6 +9,8 @@ import AppError from '@shered/errors/AppError'
 
 
 import '@shered/infra/typeorm';
+import '@shered/container';
+
 
 const app = express();
 

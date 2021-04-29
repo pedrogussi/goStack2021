@@ -1,6 +1,7 @@
 import {getRepository} from 'typeorm';
 import path from 'path';
 import fs from 'fs';
+import {inject,injectable} from 'tsyringe';
 
 import uploadConfig from '@config/upload';
 import User from '../infra/typeorm/entities/User';
@@ -13,8 +14,12 @@ interface Request {
     user_id: string;
     avatarFilename: string;
 }
+@injectable()
 export default class UpdateUserAvatarService {
-    constructor(private usersRepository: IUserRepositoroies) {}
+    constructor(
+        @inject('UsersRepository')
+        private usersRepository: IUserRepositoroies,
+    ) {}
 
 
     public async execute({user_id, avatarFilename}:Request): Promise<User>{

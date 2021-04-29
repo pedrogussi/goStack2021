@@ -2,7 +2,7 @@ import {compare} from 'bcryptjs';
 import {sign} from 'jsonwebtoken';
 import User from '../infra/typeorm/entities/User';
 import authConfig from '@config/Auth';
-
+import {inject,injectable} from 'tsyringe';
 import AppError from '@shered/errors/AppError'
 import IUserRepositoroies from '../repositories/IUsersRepositories';
 
@@ -16,8 +16,12 @@ interface Response {
     token:string;
 }
 
+@injectable()
 export default class AuthenticateUserService {
-    constructor(private usersRepository: IUserRepositoroies) {}
+    constructor(
+        @inject('UsersRepository')    
+        private usersRepository: IUserRepositoroies,
+    ) {}
 
 
     public async execute({email, password}:Request): Promise<Response> {
