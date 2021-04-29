@@ -1,10 +1,10 @@
-import {getRepository} from 'typeorm';
 import {compare} from 'bcryptjs';
 import {sign} from 'jsonwebtoken';
 import User from '../infra/typeorm/entities/User';
 import authConfig from '@config/Auth';
 
 import AppError from '@shered/errors/AppError'
+import IUserRepositoroies from '../repositories/IUsersRepositories';
 
 
 interface Request {
@@ -17,10 +17,12 @@ interface Response {
 }
 
 export default class AuthenticateUserService {
-    public async execute({email, password}:Request): Promise<Response> {
-        const usersRepositories = getRepository(User);
+    constructor(private usersRepository: IUserRepositoroies) {}
 
-        const user = await usersRepositories.findOne({where: {email} });
+
+    public async execute({email, password}:Request): Promise<Response> {
+
+        const user = await this.usersRepository.findByEmail(email);
 
         if(!user) {
             throw new AppError('Incorrect email/password combination.', 401);

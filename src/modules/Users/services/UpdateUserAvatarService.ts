@@ -6,6 +6,7 @@ import uploadConfig from '@config/upload';
 import User from '../infra/typeorm/entities/User';
 
 import AppError from '@shered/errors/AppError'
+import IUserRepositoroies from '../repositories/IUsersRepositories';
 
  
 interface Request {
@@ -13,10 +14,12 @@ interface Request {
     avatarFilename: string;
 }
 export default class UpdateUserAvatarService {
-    public async execute({user_id, avatarFilename}:Request): Promise<User>{
-        const userRepository = getRepository(User);
+    constructor(private usersRepository: IUserRepositoroies) {}
 
-        const user =await userRepository.findOne(user_id);
+
+    public async execute({user_id, avatarFilename}:Request): Promise<User>{
+
+        const user = await this.usersRepository.findById(user_id);
 
         if(!user) {
             throw new AppError('Only Authenticated users can change Avatar', 401)
@@ -31,7 +34,7 @@ export default class UpdateUserAvatarService {
         }
 
         user.avatar = avatarFilename;
-        await userRepository.save(user);
+        await this.usersRepository.save(user);
 
         return user;
     }
